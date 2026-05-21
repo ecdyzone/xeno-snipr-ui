@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline Arquitetural - SNIPR In Silico IA</title>
+    <!-- Tailwind CSS para Estilização Científica Limpa -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome para Ícones Técnicos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .step-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .step-line {
+            width: 2px;
+            background: linear-gradient(to bottom, #334155 70%, transparent);
+        }
+        .code-block {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Header Acadêmico / Industrial -->
+    <header class="border-b border-slate-800 bg-slate-900/40 backdrop-blur px-8 py-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <span class="text-xs font-bold tracking-widest text-indigo-400 uppercase">Arquitetura de Pipeline Computacional</span>
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-slate-100 mt-1">Desenho e Otimização <span class="italic text-slate-300">In Silico</span> de Receptores Sintéticos SNIPR via IA</h1>
+            <p class="text-xs text-slate-400 mt-1 max-w-3xl">Fluxo de dados linear ponta-a-ponta estruturado em scripts modulares para automação de triagem molecular, predição tridimensional estrutural e validação de segurança imunitária para Xenotransplantes.</p>
+        </div>
+        <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl text-xs shrink-0 shadow-inner">
+            <div class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span class="text-slate-400 font-medium">Orquestração: <strong class="text-slate-200 font-mono">CLI / Linux Bash</strong></span>
+        </div>
+    </header>
+
+    <!-- Layout de Trabalho Principal -->
+    <main class="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-8 p-6 md:p-8 max-w-[1800px] mx-auto w-full">
+        
+        <!-- COLUNA ESQUERDA (7 PASSOS DO FLUXOGRAMA DIDÁTICO) -->
+        <section class="xl:col-span-5 flex flex-col gap-4">
+            <div class="flex justify-between items-center mb-1">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                    <i class="fa-solid fa-route text-indigo-400"></i> Linha de Execução do Pipeline
+                </h2>
+                <span class="text-[11px] text-slate-500">Clique em qualquer etapa para abrir os detalhes</span>
+            </div>
+
+            <!-- Container dos Passos Interativos -->
+            <div class="relative flex flex-col gap-4 pl-4 border-l border-slate-800 ml-2" id="flowchart-container">
+                
+                <!-- Passo 1 -->
+                <div id="step-1" onclick="selectStep(1)" class="step-card group bg-slate-900/50 border border-slate-800 hover:border-slate-700 rounded-xl p-4 cursor-pointer flex items-start gap-4 shadow-lg">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center font-mono font-bold text-xs text-indigo-400 group-hover:bg-indigo-900 group-hover:text-indigo-300 shrink-0 transition-colors">1</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-sm font-bold text-slate-200 tracking-tight truncate">Mineração e Padronização de Dados</h3>
+                            <span class="text-[10px] font-mono bg-slate-950 border border-slate-800 text-slate-400 px-1.5 py-0.5 rounded">fetch_data.sh</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1 truncate">Download em lote de sequências de anticorpos de bancos públicos.</p>
+                    </div>
+                </div>
+
+                <!-- Passo 2 -->
+                <div id="step-2" onclick="selectStep(2)" class="step-card group bg-slate-900/50 border border-slate-800 hover:border-slate-700 rounded-xl p-4 cursor-pointer flex items-start gap-4 shadow-lg">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center font-mono font-bold text-xs text-indigo-400 group-hover:bg-indigo-900 group-hover:text-indigo-300 shrink-0 transition-colors">2</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-sm font-bold text-slate-200 tracking-tight truncate">Clonagem Digital (Quimerização)</h3>
+                            <span class="text-[10px] font-mono bg-slate-950 border border-slate-800 text-slate-400 px-1.5 py-0.5 rounded">clean_and_stitch.py</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1 truncate">Montagem computacional das variantes sintéticas acopladas ao core Notch.</p>
+                    </div>
+                </div>
+
+                <!-- Passo 3 -->
+                <div id="step-3" onclick="selectStep(3)" class="step-card group bg-slate-900/50 border border-slate-800 hover:border-slate-700 rounded-xl p-4 cursor-pointer flex items-start gap-4 shadow-lg">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center font-mono font-bold text-xs text-indigo-400 group-hover:bg-indigo-900 group-hover:text-indigo-300 shrink-0 transition-colors">3</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-sm font-bold text-slate-200 tracking-tight truncate">Triagem Estrutural de Larga Escala</h3>
+                            <span class="text-[10px] font-mono bg-slate-950 border border-slate-800 text-slate-400 px-1.5 py-0.5 rounded">run_esmfold.sh</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1 truncate">Dobramento ab initio de alta velocidade via Modelo de Linguagem de Proteínas.</p>
+                    </div>
+                </div>
+
+                <!-- Passo 4 -->
+                <div id="step-4" onclick="selectStep(4)" class="step-card group bg-slate-900/50 border border-slate-800 hover:border-slate-700 rounded-xl p-4 cursor-pointer flex items-start gap-4 shadow-lg">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center font-mono font-bold text-xs text-indigo-400 group-hover:bg-indigo-900 group-hover:text-indigo-300 shrink-0 transition-colors">4</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-sm font-bold text-slate-200 tracking-tight truncate">Primeiro Funil de Dados</h3>
+                            <span class="text-[10px] font-mono bg-slate-950 border border-slate-800 text-slate-400 px-1.5 py-0.5 rounded">filter_candidates.py</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1 truncate">Filtro matemático e eliminação de variantes instáveis por métricas estatísticas.</p>
+                    </div>
+                </div>
+
+                <!-- Passo 5 -->
+                <div id="step-5" onclick="selectStep(5)" class="step-card group bg-slate-900/50 border border-slate-800 hover:border-slate-700 rounded-xl p-4 cursor-pointer flex items-start gap-4 shadow-lg">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center font-mono font-bold text-xs text-indigo-400 group-hover:bg-indigo-900 group-hover:text-indigo-300 shrink-0 transition-colors">5</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-sm font-bold text-slate-200 tracking-tight truncate">Refinamento Atômico & Docking de IA</h3>
+                            <span class="text-[10px] font-mono bg-slate-950 border border-slate-800 text-slate-400 px-1.5 py-0.5 rounded">run_alphafold3.sh</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1 truncate">Simulação ultra-precisa de co-folding flexível do receptor contra o alvo.</p>
+                    </div>
+                </div>
+
+                <!-- Passo 6 -->
+                <div id="step-6" onclick="selectStep(6)" class="step-card group bg-slate-900/50 border border-slate-800 hover:border-slate-700 rounded-xl p-4 cursor-pointer flex items-start gap-4 shadow-lg">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center font-mono font-bold text-xs text-indigo-400 group-hover:bg-indigo-900 group-hover:text-indigo-300 shrink-0 transition-colors">6</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-sm font-bold text-slate-200 tracking-tight truncate">Filtro de Segurança (Xeno-Check)</h3>
+                            <span class="text-[10px] font-mono bg-slate-950 border border-slate-800 text-slate-400 px-1.5 py-0.5 rounded">cross_reactivity_check.py</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1 truncate">Alinhamento estrutural 3D contra o proteoma suíno para evitar off-targets.</p>
+                    </div>
+                </div>
+
+                <!-- Passo 7 -->
+                <div id="step-7" onclick="selectStep(7)" class="step-card group bg-slate-900/50 border border-slate-800 hover:border-slate-700 rounded-xl p-4 cursor-pointer flex items-start gap-4 shadow-lg">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-950 border border-indigo-800 flex items-center justify-center font-mono font-bold text-xs text-indigo-400 group-hover:bg-indigo-900 group-hover:text-indigo-300 shrink-0 transition-colors">7</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-sm font-bold text-slate-200 tracking-tight truncate">Interface de Bancada e Exportação</h3>
+                            <span class="text-[10px] font-mono bg-slate-950 border border-slate-800 text-slate-400 px-1.5 py-0.5 rounded">app.py</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1 truncate">Entrega do ranking final e arquivos .FASTA em um dashboard Streamlit/HTML.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- COLUNA DIREITA (PAINEL DE DOCUMENTAÇÃO TÉCNICA PROFISSIONAL) -->
+        <section class="xl:col-span-7 flex flex-col bg-slate-900/30 border border-slate-800 rounded-2xl p-6 shadow-2xl relative min-h-[600px] justify-between">
+            
+            <div id="details-content">
+                <!-- Injetado Dinamicamente via JavaScript -->
+            </div>
+
+            <!-- Rodapé Informativo Interno -->
+            <div class="mt-8 border-t border-slate-800/80 pt-4 flex justify-between items-center text-xs text-slate-500">
+                <span>Projeto IC: Receptores Quiméricos SNIPR</span>
+                <span class="font-mono text-slate-600">Pipeline v1.0.0 (Stable)</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Banco de Dados da Documentação Técnica de Cada Passo -->
+    <script>
+        const technicalDocumentation = {
+            overview: {
+                title: "Visão Geral do Fluxo de Trabalho",
+                subtitle: "Arquitetura Pragmática Orientada a Dados",
+                badge: "Didático & Técnico",
+                description: "Este painel apresenta as especificações exatas de cada etapa computacional do projeto. O objetivo deste pipeline é mitigar o empirismo laboratorial na síntese de receptores celulares artificiais baseados em Notch (SNIPRs), prevendo por aprendizado profundo e modelagem bioinformática quais designs possuem maior afinidade terapêutica humana e segurança em porcos transgênicos.",
+                instructions: "<strong>Instruções de Apresentação:</strong> Clique nas etapas do fluxograma à esquerda para detalhar as entradas, scripts, ferramentas moleculares e saídas de dados reais geradas por cada componente do projeto.",
+                metrics: [
+                    { label: "Módulos de Automação", value: "7 Scripts" },
+                    { label: "Abordagem de Docking", value: "IA Co-folding" },
+                    { label: "Critério Crítico", value: "0% Off-target Suíno" }
+                ]
+            },
+            steps: {
+                1: {
+                    title: "Mineração e Padronização de Sequências",
+                    subtitle: "Script Principal de Coleta Automatizada",
+                    script: "fetch_data.sh",
+                    tools: ["Bash CLI", "cURL / Wget", "NCBI Entrez Direct (EDirect)", "IMGT/LIGM-DB API"],
+                    input: "Lista estruturada (txt/json) com identificadores (IDs/Accession numbers) de anticorpos monoclonais scFv ou Nanobodies validados clinicamente contra os alvos inflamatórios de interesse (ex: TNF-alfa humano, receptor de complemento C5a).",
+                    output: "Diretório local raw_sequences/ populado com arquivos individuais no formato bruto .fasta contendo as sequências de aminoácidos estruturadas das cadeias pesadas (VH) e leves (VL).",
+                    technicalDetails: "O script em Bash realiza chamadas paralelas via cURL para as APIs públicas do repositório IMGT e NCBI. Ele contorna o download manual exaustivo, tratando erros de conexão de rede e padronizando as quebras de linha padrão do terminal UNIX para evitar corrupção de strings de texto biológico.",
+                    metricLabel: "Tempo Estimado Execução",
+                    metricValue: "< 3 minutos"
+                },
+                2: {
+                    title: "Clonagem Digital e Fusão de Quimeras",
+                    subtitle: "Script de Engenharia Molecular in silico",
+                    script: "clean_and_stitch.py",
+                    tools: ["Python 3", "BioPython", "Regex (Expressões Regulares)"],
+                    input: "Arquivos brutos .fasta gerados na etapa 1 + Arquivo mestre contendo as sequências conservadas do chassi estrutural estável do receptor SNIPR (Human Notch1 Core regulatório, domínio Transmembrana nativo ou mutado e o domínio do Fator de Transcrição Sintético, ex: tTA ou Gal4-VP16).",
+                    output: "Um arquivo unificado chimeras_ready.fasta contendo o arranjo combinatório exato das junções traducionais em fase (in-frame).",
+                    technicalDetails: "O script varre as sequências mineradas utilizando padrões Regex avançados para extrair especificamente as alças CDRs funcionais dos fragmentos Fv e monta a sequência lógica na ordem exata de expressão biológica celular: [Peptídeo Sinal] - [Domínio Variável de Ligação] - [Linker Flexível] - [Notch Core] - [Fator de Transcrição]. Garante que nenhuma mutação por deslocamento de matriz de leitura ocorra no chassi computacional.",
+                    metricLabel: "Gargalo de Processamento",
+                    metricValue: "Lógica de Código (CPU)"
+                },
+                3: {
+                    title: "Triagem Estrutural de Larga Escala",
+                    subtitle: "Pipeline Ab Initio de Alta Velocidade",
+                    script: "run_esmfold.sh",
+                    tools: ["ESMFold (Meta AI)", "PyTorch / CUDA", "Docker / Singularity Containers"],
+                    input: "O arquivo multifasta consolidado chimeras_ready.fasta contendo todas as quimeras variantes projetadas na etapa anterior.",
+                    output: "Diretório estruturado esm_outputs/ contendo arquivos de coordenadas atômicas tridimensionais (.pdb) e relatórios de confiança estatística (.json).",
+                    technicalDetails: "Como a modelagem complexa tradicional de dobramento molecular consome dias de processamento, este passo introduz o ESMFold (Modelo de Linguagem de Grandes Proteínas da Meta) para realizar uma triagem 'grossa' ultrarrápida. O ESMFold processa sequências em frações de segundo por estrutura, prevendo o dobramento nativo de cada receptor isolado para identificar deformações de síntese precocemente.",
+                    metricLabel: "Aceleração de Hardware",
+                    metricValue: "GPU Dedicada (VRAM)"
+                },
+                4: {
+                    title: "Primeiro Funil de Dados e Filtragem",
+                    subtitle: "Script Estatístico de Qualidade Bioinformática",
+                    script: "filter_candidates.py",
+                    tools: ["Python 3", "Pandas DataFrames", "NumPy", "JSON Parser"],
+                    input: "Arquivos estatísticos de metadados de predição (.json) oriundos da triagem rápida do ESMFold.",
+                    output: "Arquivo de dados tabulares limpos top_candidates.csv listando apenas as 20 variantes de melhor performance de dobramento.",
+                    technicalDetails: "O script realiza a leitura sistemática das métricas de pLDDT (Predicted Local Distance Difference Test) de cada resíduo de aminoácido contido nos arquivos JSON. Ele calcula a média global e descarta de forma automatizada quimeras com pLDDT médio abaixo de 75 ou que apresentem instabilidade espacial prevista nos domínios transmembrana, diminuindo drasticamente o custo computacional dos passos seguintes de alta precisão.",
+                    metricLabel: "Redução do Espaço Amostral",
+                    metricValue: "De milhares para 20"
+                },
+                5: {
+                    title: "Refinamento Atômico e Docking por IA",
+                    subtitle: "Modelagem Preditiva de Interface com Confiança do Nobel",
+                    script: "run_alphafold3.sh",
+                    tools: ["AlphaFold3 (Google DeepMind)", "AlphaFold Server API", "Redes de Difusão Atômica"],
+                    input: "Sequências exatas extraídas do arquivo top_candidates.csv acopladas à sequência correspondente da proteína de ataque imunitário humana que serve como alvo de rejeição endotelial (Antígeno).",
+                    output: "Modelos complexos tridimensionais em formato de alta densidade criptográfica (.cif / .pdb) e arquivos detalhados de confiança posicional inter-cadeia.",
+                    technicalDetails: "Aqui ocorre o Docking flexível real guiado por inteligência artificial. O AlphaFold3 simula o Co-folding estrutural: ele dobra o receptor SNIPR simulando simultaneamente a presença da proteína humana alvo. A análise foca no score iPTM (interface pTM), onde valores acima de 0.6 validam matematicamente que a IA detectou uma alta probabilidade de acoplamento físico termodinâmico estável in vivo.",
+                    metricLabel: "Métrica Decisiva",
+                    metricValue: "iPTM Score > 0.60"
+                },
+                6: {
+                    title: "Filtro de Segurança Biológica (Xeno-Check)",
+                    subtitle: "Algoritmo de Prevenção de Ligação Off-Target",
+                    script: "cross_reactivity_check.py",
+                    tools: ["Biopython", "TMalign / USalign CLI", "Banco de dados local do Proteoma de Superfície de Sus scrofa"],
+                    input: "Coordenadas moleculares 3D geradas pelo AlphaFold3 contendo a conformação do sítio ativo de ligação (CDRs) do receptor sintético.",
+                    output: "Matriz final de risco imunológico e o arquivo central estruturado final_ranking.json.",
+                    technicalDetails: "Um dos maiores riscos no xenotransplante é o receptor quimérico do porco interagir acidentalmente com proteínas nativas do próprio animal (reação cruzada), disparando falsos-positivos terapêuticos ou estresse celular intrínseco. O script realiza alinhamento estrutural 3D local contra o proteoma de superfície do porco para isolar e classificar como 'Seguro' apenas candidatos com homologia conformacional estrutural nula ou desprezível.",
+                    metricLabel: "Foco Clínico",
+                    metricValue: "Segurança de Tecidos"
+                },
+                7: {
+                    title: "Interface de Bancada e Exportação",
+                    subtitle: "Aplicações Práticas de Entrega e Visualização Humana",
+                    script: "app.py",
+                    tools: ["Streamlit Framework", "TailwindCSS Componentization", "3Dmol.js (WebGL Rendering)"],
+                    input: "O arquivo final estruturado de triagem de dados final_ranking.json contendo os scores unificados, homologia e caminhos das estruturas moleculares.",
+                    output: "Dashboard gráfico web interativo rodando localmente no navegador do usuário do laboratório.",
+                    technicalDetails: "Esta etapa traduz dados complexos de bioinformática e matrizes extensas em uma ferramenta de tomada de decisão acessível para biólogos e médicos de bancada. A interface gráfica renderiza em aceleração de hardware a molécula em 3D interativo, permitindo rotacionar o ponto de contato do complexo, e oferece um botão direto de download para exportar sequências FASTA limpas para encomenda de síntese de DNA.",
+                    metricLabel: "Entregável do Software",
+                    metricValue: "Acesso Amigável à Bancada"
+                }
+            }
+        };
+
+        // Função de manipulação do estado e renderização da interface baseada em cliques
+        function selectStep(stepId) {
+            // Remove as classes de destaque ativas de todos os cards
+            document.querySelectorAll('.step-card').forEach(card => {
+                card.classList.remove('border-indigo-500', 'bg-indigo-950/20', 'ring-1', 'ring-indigo-500/30');
+                card.classList.add('border-slate-800', 'bg-slate-900/50');
+                // Reseta a numeração visual
+                const numBox = card.querySelector('div');
+                if (numBox) {
+                    numBox.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-400');
+                    numBox.classList.add('bg-slate-950', 'border-slate-800', 'text-indigo-400');
+                }
+            });
+
+            const panel = document.getElementById('details-content');
+
+            // Caso clique no passo ativo ou queira ver detalhes específicos do passo
+            if (stepId && technicalDocumentation.steps[stepId]) {
+                const data = technicalDocumentation.steps[stepId];
+                
+                // Aplica estilos visuais ativos no card clicado
+                const activeCard = document.getElementById(`step-${stepId}`);
+                activeCard.classList.remove('border-slate-800', 'bg-slate-900/50');
+                activeCard.classList.add('border-indigo-500', 'bg-indigo-950/20', 'ring-1', 'ring-indigo-500/30');
+                
+                const activeNumBox = activeCard.querySelector('div');
+                if (activeNumBox) {
+                    activeNumBox.classList.remove('bg-slate-950', 'border-slate-800', 'text-indigo-400');
+                    activeNumBox.classList.add('bg-indigo-600', 'text-white', 'border-indigo-400');
+                }
+
+                // Injeta ferramentas em formato pill
+                let toolsHtml = "";
+                data.tools.forEach(t => {
+                    toolsHtml += `<span class="bg-slate-800 border border-slate-700 text-slate-300 font-mono text-[11px] px-2.5 py-1 rounded-md">${t}</span>`;
+                });
+
+                // Constrói o HTML dinâmico com rigor técnico para o orientador
+                panel.innerHTML = `
+                    <div class="flex flex-col gap-1 mb-6">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-bold font-mono tracking-wider text-indigo-400 uppercase bg-indigo-950/50 border border-indigo-900/50 px-2 py-0.5 rounded flex items-center gap-1.5">
+                                <i class="fa-solid fa-code"></i> Script Executável: ${data.script}
+                            </span>
+                            <span class="text-xs text-slate-500">Módulo Ativo #${stepId}</span>
+                        </div>
+                        <h2 class="text-xl font-bold tracking-tight text-slate-100 mt-2">${data.title}</h2>
+                        <p class="text-xs text-slate-400 italic">${data.subtitle}</p>
+                    </div>
+
+                    <!-- Grid de Inputs e Outputs Técnicos -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-4 flex flex-col gap-1.5 shadow-inner">
+                            <span class="text-[10px] font-bold text-sky-400 uppercase tracking-widest flex items-center gap-1"><i class="fa-solid fa-arrow-right-to-bracket"></i> Input de Dados</span>
+                            <p class="text-xs text-slate-300 leading-relaxed">${data.input}</p>
+                        </div>
+                        <div class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-4 flex flex-col gap-1.5 shadow-inner">
+                            <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1"><i class="fa-solid fa-arrow-right-from-bracket"></i> Output Gerado</span>
+                            <p class="text-xs text-slate-300 leading-relaxed">${data.output}</p>
+                        </div>
+                    </div>
+
+                    <!-- Divisão do Stack de Ferramentas Utilizadas -->
+                    <div class="mb-6">
+                        <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Stack Tecnológico & Ferramentas Biológicas</span>
+                        <div class="flex flex-wrap gap-2">
+                            ${toolsHtml}
+                        </div>
+                    </div>
+
+                    <!-- Detalhamento de Mecanismo de Ação e Lógica Computacional -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 mb-6">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-gears text-indigo-400"></i> Lógica Computacional e Arquitetura do Script
+                        </h4>
+                        <p class="text-xs text-slate-400 leading-relaxed font-normal">${data.technicalDetails}</p>
+                    </div>
+
+                    <!-- Indicador Estatístico Local -->
+                    <div class="bg-indigo-950/30 border border-indigo-900/30 p-3.5 rounded-xl flex justify-between items-center text-xs">
+                        <span class="text-slate-400 font-medium">${data.metricLabel}:</span>
+                        <strong class="font-mono text-indigo-300 bg-indigo-950 border border-indigo-800/60 px-2.5 py-1 rounded">${data.metricValue}</strong>
+                    </div>
+                `;
+            } else {
+                // Renderização da Tela Didática Padrão Inicial (Overview)
+                const data = technicalDocumentation.overview;
+                
+                let metricsHtml = "";
+                data.metrics.forEach(m => {
+                    metricsHtml += `
+                        <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-xl flex flex-col shadow-inner">
+                            <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">${m.label}</span>
+                            <span class="text-lg font-bold text-indigo-400 mt-1 font-mono">${m.value}</span>
+                        </div>
+                    `;
+                });
+
+                panel.innerHTML = `
+                    <div class="flex flex-col gap-1 mb-6">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold tracking-widest text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-900/50 px-2 py-0.5 rounded">${data.badge}</span>
+                        </div>
+                        <h2 class="text-xl font-bold tracking-tight text-slate-100 mt-3">${data.title}</h2>
+                        <p class="text-xs text-slate-400 italic">${data.subtitle}</p>
+                    </div>
+
+                    <div class="text-xs text-slate-300 leading-relaxed space-y-4 mb-6">
+                        <p>${data.description}</p>
+                        <div class="bg-slate-950/60 border-l-2 border-indigo-500 p-4 rounded-r-xl text-slate-400">
+                            ${data.instructions}
+                        </div>
+                    </div>
+
+                    <!-- Grid de Métricas Globais da Proposta -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-2">
+                        ${metricsHtml}
+                    </div>
+                `;
+            }
+        }
+
+        // Inicializa renderizando a tela de visão geral didática padrão
+        window.onload = () => selectStep(null);
+    </script>
+</body>
+</html>

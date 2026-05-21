@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNIPR Modular Builder - Protótipo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sequence-word-break {
+            word-break: break-all;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        }
+        .module-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="bg-indigo-600 text-white p-2 rounded-lg font-bold shadow-lg shadow-indigo-600/20">
+                <i class="fa-solid fa-cubes"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight">SNIPR <span class="text-indigo-400">Builder v3</span></h1>
+                <p class="text-xs text-slate-400">Montagem Combinatória de Receptores Sintéticos em Tempo Real</p>
+            </div>
+        </div>
+        <div class="text-xs bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-indigo-400 animate-pulse"></span>
+            <span>Modo de Prova de Conceito (Mock Data)</span>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-6 p-6">
+        
+        <!-- Painel Esquerdo: Seletores dos Módulos (5 Dropdowns) -->
+        <div class="xl:col-span-5 flex flex-col gap-5">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-2xl">
+                <h2 class="text-sm font-semibold text-slate-200 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-indigo-400"></i> Arquitetura Modular do Receptor
+                </h2>
+                
+                <!-- Form / Dropdowns -->
+                <div class="flex flex-col gap-4">
+                    <!-- 1. LBD Selector -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5 flex justify-between">
+                            <span>1. LBD (Ligand Binding Domain)</span>
+                            <span class="flex items-center gap-1"><span class="module-dot" style="background-color: #00FFFF;"></span> <span class="text-[10px] font-mono text-cyan-400">#00FFFF</span></span>
+                        </label>
+                        <select id="select-LBD" onchange="updateReceptor()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </select>
+                    </div>
+
+                    <!-- 2. ECD Selector -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5 flex justify-between">
+                            <span>2. ECD (Extracellular Domain / Hinge)</span>
+                            <span class="flex items-center gap-1"><span class="module-dot" style="background-color: #00FF00;"></span> <span class="text-[10px] font-mono text-emerald-400">#00FF00</span></span>
+                        </label>
+                        <select id="select-ECD" onchange="updateReceptor()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </select>
+                    </div>
+
+                    <!-- 3. TMD Selector -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5 flex justify-between">
+                            <span>3. TMD (Transmembrane Domain)</span>
+                            <span class="flex items-center gap-1"><span class="module-dot" style="background-color: #FFFF00;"></span> <span class="text-[10px] font-mono text-yellow-400">#FFFF00</span></span>
+                        </label>
+                        <select id="select-TMD" onchange="updateReceptor()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </select>
+                    </div>
+
+                    <!-- 4. JMD Selector -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5 flex justify-between">
+                            <span>4. JMD (Juxtamembrane Domain)</span>
+                            <span class="flex items-center gap-1"><span class="module-dot" style="background-color: #FF4500;"></span> <span class="text-[10px] font-mono text-orange-500">#FF4500</span></span>
+                        </label>
+                        <select id="select-JMD" onchange="updateReceptor()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </select>
+                    </div>
+
+                    <!-- 5. PAYLOAD Selector -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5 flex justify-between">
+                            <span>5. PAYLOAD (Transcription Factor)</span>
+                            <span class="flex items-center gap-1"><span class="module-dot" style="background-color: #FF00FF;"></span> <span class="text-[10px] font-mono text-magenta-400" style="color: #FF00FF;">#FF00FF</span></span>
+                        </label>
+                        <select id="select-PAYLOAD" onchange="updateReceptor()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumo Estatístico do Construtor -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex-1 flex flex-col justify-between shadow-xl">
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-200 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-simple text-sky-400"></i> Propriedades Consolidadas
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                            <span class="block text-slate-400 mb-1">Comprimento Total</span>
+                            <span id="stat-length" class="text-xl font-bold font-mono text-sky-400">0 aa</span>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                            <span class="block text-slate-400 mb-1">Score Médio Construção</span>
+                            <span id="stat-score" class="text-xl font-bold font-mono text-emerald-400">0.0</span>
+                        </div>
+                    </div>
+
+                    <!-- Identificador Gerado -->
+                    <div class="mt-4">
+                        <span class="block text-xs font-medium text-slate-400 mb-1">String Identificadora Geral:</span>
+                        <div id="receptor-fullname" class="bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg font-mono text-xs text-indigo-300 select-all truncate">
+                            SNIPR-LBD-ECD-TMD-JMD-PAYLOAD
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botões de Ações de Exportação -->
+                <div class="grid grid-cols-2 gap-3 mt-6">
+                    <button onclick="mockExport('FASTA')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs">
+                        <i class="fa-solid fa-file-lines"></i> Exportar (.FASTA)
+                    </button>
+                    <button onclick="mockExport('GenBank')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs shadow-lg shadow-indigo-600/10">
+                        <i class="fa-solid fa-dna"></i> Exportar (.GB / GenBank)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel Direito: Visualizador de Sequência Colorida Dinâmica -->
+        <div class="xl:col-span-7 flex flex-col bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-emerald-400"></i> Visualização In Silico Sequencial (`snipr_visualizer.py`)
+                </h2>
+                <span class="text-xs text-slate-500 font-mono">Renderização Baseada em Cores</span>
+            </div>
+
+            <!-- Visualizador de Bloco Linear Sintético -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-4 flex h-8 overflow-hidden items-stretch shadow-inner" style="padding-bottom: 6px;padding-top: 6px;">
+                <div id="bar-LBD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #00FFFF;" title="LBD">LBD</div>
+                <div id="bar-ECD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #00FF00;" title="ECD">ECD</div>
+                <div id="bar-TMD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #FFFF00;" title="TMD">TMD</div>
+                <div id="bar-JMD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #FF4500;" title="JMD">JMD</div>
+                <div id="bar-PAYLOAD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #FF00FF;" title="PAYLOAD">PAYLOAD</div>
+            </div>
+
+            <!-- Caixa de Texto da Sequência Colorida FASTA -->
+            <div class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-5 relative overflow-y-auto max-h-[500px] shadow-inner flex flex-col">
+                <div class="text-[11px] font-mono text-slate-500 border-b border-slate-800 pb-2 mb-3 flex justify-between select-none">
+                    <span>FASTA SEQUENCE PREVIEW</span>
+                    <span id="fasta-header">>SNIPR_assembled_sequence</span>
+                </div>
+                
+                <!-- Corpo da Sequência com Cores -->
+                <div id="sequence-body" class="sequence-word-break text-xs tracking-wider leading-relaxed flex-1 select-all font-semibold">
+                    <!-- Injetado dinamicamente via JS -->
+                </div>
+            </div>
+
+            <!-- Informações das Referências Bibliográficas do Módulo Selecionado -->
+            <div class="mt-4 bg-slate-950/60 border border-slate-800 rounded-lg p-3 text-xs">
+                <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1"><i class="fa-solid fa-bookmark"></i> Referências de Engenharia Atuais</span>
+                <div id="module-references" class="text-slate-400 leading-normal">
+                    <!-- Injetado dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script de Dados e Lógica Interativa -->
+    <script>
+        // Dados brutos extraídos diretamente do seu snipr_modules.csv
+        const sniprDatabase = {
+  "LBD": [
+    {
+      "name": "CD45 scFv (BC8 apamistamab)",
+      "sequence": "MALPVTALLLPLALLLHAARPEQKLISEEDLEVKLLESGGGLVQPGGSLKLSCAASGFDFSRYWMSWVRQAPGKGLEWIGEINPTSSTINFTPSLKDKVFISRDNAKNTLYLQMSKVRSEDTALYYCARGNYYRYGDAMDYWGQGTSVTVSSGGGGSGGGGSGGGGSGGGGSDIALTQSPASLAVSLGQRATISCRASKSVSTSGYSYLHWYQQKPGQPPKLLIYLASNLESGVPARFSGSGSGTDFTLNIHPVEEEDAATYYCQHSRELPFTFGSGTKLEIK",
+      "score": 0.0,
+      "reference": "https://www.imgt.org/mAb-DB/mAbcard?AbId=633",
+      "length": 283,
+      "description": "CD8_signalpeptide_myc-tag_CD45apamistamab-scFv"
+    },
+    {
+      "name": "CD3 scFv (OKT3 muromonab)",
+      "sequence": "MALPVTALLLPLALLLHAARPEQKLISEEDLQVQLQQSGAELARPGASVKMSCKASGYTFTRYTMHWVKQRPGQGLEWIGYINPSRGYTNYNQKFKDKATLTTDKSSSTAYMQLSSLTSEDSAVYYCARYYDDHYCLDYWGQGTTLTVSSGGGGSGGGGSGGGGSQIVLTQSPAIMSASPGEKVTMTCSASSSVSYMNWYQQKSGTSPKRWIYDTSKLASGVPAHFRGSGSGTSYSLTISGMEAEDAATYYCQQWSSNPFTFGSGTKLEIN",
+      "score": 0.0,
+      "reference": "https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/therasabdab/therasummary/?INN=Muromonab",
+      "length": 272,
+      "description": "CD8_signalpeptide_myc-tag_CD3muromonab-scFv"
+    },
+    {
+      "name": "VEGF",
+      "sequence": "MALPVTALLLPLALLLHAARPEQKLISEEDLDIQMTQSPSSLSASVGDRVTITCRASQDVSTAVAWYQQKPGKAPKLLIYSASFLYSGVPSRFSGSGSGTDFTLTISSLQPEDFATYYCKQGYANPWTFGQGTKVEIKGGGGSGGGGSGGGGSEVQLVESGGGLVQPGGSLRLSCAASGFTISDYWIHWVRQAPGKGLEWVAGITPAGGYTYYADSVKGRFTISADTSKNTAYLQMNSLRAEDTAVYYCARFVFFLPYAMDYWGQGTLVTVSS",
+      "score": 0.0,
+      "reference": "Piraner2024",
+      "length": 273,
+      "description": "CD8_signalpeptide_myc-tag_VEGF-scFv"
+    },
+    {
+      "name": "TGFbeta",
+      "sequence": "MALPVTALLLPLALLLHAARPEQKLISEEDLQVQLVQSGAEVKKPGSSVKVSCKASGYTFSSNVISWVRQAPGQGLEWMGGVIPIVDIANYAQRFKGRVTITADESTSTTYMELSSLRSEDTAVYYCALPRAFVLDAMDYWGQGTLVTVSSGGGGSGGGGSGGGGSETVLTQSPGTLSLSPGERATLSCRASQSLGSSYLAWYQQKPGQAPRLLIYGASSRAPGIPDRFSGSGSGTDFTLTISRLEPEDFAVYYCQQYADSPITFGQGTRLEIK",
+      "score": 0.0,
+      "reference": "Piraner2024",
+      "length": 274,
+      "description": "CD8_signalpeptide_myc-tag_TGFB-scFv"
+    }
+  ],
+  "ECD": [
+    {
+      "name": "CD8a_Hinge_V2",
+      "sequence": "TTTPAPRPPTPAPTIASQPLSLRPEAC",
+      "score": 0.0,
+      "reference": "Zhu et al. 2022 (Table S2)",
+      "length": 27,
+      "description": ""
+    },
+    {
+      "name": "Notch1_LNR",
+      "sequence": "ILDYSFGGGAGRDIPPPLIEEACELPECQEDAGNKVCSLQCNNHACGWDGGDCSLNFNDPWKNCTQSLQCWKYFSDGHCDSQCNSAGCLFDGFDCQRAEGQCNPLYDQYCKDHFSDGHCDQGCNSAECEWDGLDCAEHVPERLAAGTLVVVVLMPPEQLRNSSFHFLRELSRVLHTNVVFKRDAHGQQMIFPYYGREEELRKHPIKRAAEGWAAPDALLGQVKASLLPGGSEGGRRRRELDPMDVRGSIVYLEIDNRQCVQASSQCFQSATDVAAFLGALASLGSLNIPYKIEAVQSETVEPPPPAQLH",
+      "score": 0.0,
+      "reference": "Zhu et al. 2022 (Table S2)",
+      "length": 309,
+      "description": "Notch1 NRR from human Notch1"
+    }
+  ],
+  "TMD": [
+    {
+      "name": "NOTCH2tmd",
+      "sequence": "LLYLLAVAVVIILFIILLGVIMA",
+      "score": 28.55,
+      "reference": "Zhu et al. 2022 (Table S4)",
+      "length": 23,
+      "description": ""
+    },
+    {
+      "name": "NOTCH3",
+      "sequence": "LPLLVAGAVLLLVILVLGVMVA",
+      "score": 26.43,
+      "reference": "Zhu et al. 2022 (Table S4)",
+      "length": 22,
+      "description": ""
+    },
+    {
+      "name": "NOTCH1",
+      "sequence": "FMYVAAAAFVLLFFVGCGVLLS",
+      "score": 24.22,
+      "reference": "Zhu et al. 2022 (Table S4)",
+      "length": 22,
+      "description": ""
+    },
+    {
+      "name": "CLSTN1",
+      "sequence": "IATVVIIISVCMLVFVVAMGVY",
+      "score": 23.1,
+      "reference": "Zhu et al. 2022 (Table S4)",
+      "length": 22,
+      "description": ""
+    }
+  ],
+  "JMD": [
+    {
+      "name": "DAG1",
+      "sequence": "RKKRKGK",
+      "score": 58.64,
+      "reference": "Zhu et al. 2022 (Table S5)",
+      "length": 7,
+      "description": ""
+    },
+    {
+      "name": "NRG2",
+      "sequence": "KTKKQRKQMHNHLR",
+      "score": 53.68,
+      "reference": "Zhu et al. 2022 (Table S5)",
+      "length": 14,
+      "description": ""
+    },
+    {
+      "name": "NRG1",
+      "sequence": "KTKKQRKKLHDRLR",
+      "score": 36.61,
+      "reference": "Zhu et al. 2022 (Table S5)",
+      "length": 14,
+      "description": ""
+    },
+    {
+      "name": "NOTCH2",
+      "sequence": "KRKRKH",
+      "score": 22.25,
+      "reference": "Zhu et al. 2022 (Table S5)",
+      "length": 6,
+      "description": "Notch2 c-terminal JMD"
+    }
+  ],
+  "PAYLOAD": [
+    {
+      "name": "G4VP64",
+      "sequence": "MKLLSSIEQACDICRLKKLKCSKEKPKCAKCLKNNWECRYSPKTKRSPLTRAHLTEVESRLERLEQLFLLIFPREDLDMILKMDSLQDIKALLTGLFVQDNVNKDAVTDRLASVETDMPLTLRQHRISATSSSEESSNKGQRQLTVSAAAGGSGGSGGSDALDDFDLDMLGSDALDDFDLDMLGSDALDDFDLDMLGSDALDDFDLDMLGS",
+      "score": 0.0,
+      "reference": "Zhu et al. 2022 (Table S2)",
+      "length": 211,
+      "description": "Gal4DBD_VP64"
+    }
+  ]
+};
+
+        // Cores padrão configuradas no seu snipr_visualizer.py
+        const colorMapping = {
+            "LBD": "#00FFFF",
+            "ECD": "#00FF00",
+            "TMD": "#FFFF00",
+            "JMD": "#FF4500",
+            "PAYLOAD": "#FF00FF"
+        };
+
+        // Inicializa os dropdowns ao carregar o protótipo
+        function initDropdowns() {
+            const modules = ["LBD", "ECD", "TMD", "JMD", "PAYLOAD"];
+            
+            modules.forEach(mod => {
+                const selectElement = document.getElementById(`select-${mod}`);
+                const items = sniprDatabase[mod] || [];
+                
+                items.forEach((item, index) => {
+                    const option = document.createElement("option");
+                    option.value = index;
+                    option.textContent = `${item.name} (${item.length} aa)`;
+                    selectElement.appendChild(option);
+                });
+            });
+
+            // Dispara a montagem inicial do primeiro arranjo
+            updateReceptor();
+        }
+
+        // Atualiza a visualização, tamanho, score e sequência em tempo real
+        function updateReceptor() {
+            const modules = ["LBD", "ECD", "TMD", "JMD", "PAYLOAD"];
+            let fullSequenceHtml = "";
+            let totalLength = 0;
+            let combinedScore = 0;
+            let nameParts = ["SNIPR"];
+            let referenceHtml = "";
+
+            modules.forEach(mod => {
+                const selectElement = document.getElementById(`select-${mod}`);
+                const selectedIdx = selectElement.value;
+                const activeItem = sniprDatabase[mod][selectedIdx];
+
+                if (activeItem) {
+                    totalLength += activeItem.length;
+                    combinedScore += activeItem.score;
+                    nameParts.push(activeItem.name);
+
+                    // Adiciona o bloco de aminoácidos colorido
+                    const color = colorMapping[mod];
+                    fullSequenceHtml += `<span style="color: ${color};" title="${mod}: ${activeItem.name}">${activeItem.sequence}</span>`;
+
+                    // Ajusta a proporção proporcional das larguras visuais dos blocos
+                    const barElement = document.getElementById(`bar-${mod}`);
+                    barElement.style.flexGrow = activeItem.length || 1;
+                    barElement.textContent = activeItem.name;
+
+                    // Compila as referências
+                    referenceHtml += `<p class="mb-1"><strong style="color: ${color};">${mod}:</strong> ${activeItem.reference || 'Sem referência'} - <em>${activeItem.description || 'Sem descrição'}</em></p>`;
+                }
+            });
+
+            // Calcula o Score Médio (Apenas ilustrativo baseado nas notas do CSV)
+            const averageScore = (combinedScore / modules.length).toFixed(1);
+
+            // Atualiza os elementos DOM na interface
+            document.getElementById("sequence-body").innerHTML = fullSequenceHtml;
+            document.getElementById("stat-length").textContent = `${totalLength} aa`;
+            document.getElementById("stat-score").textContent = averageScore;
+            
+            const fullNameStr = nameParts.join("-");
+            document.getElementById("receptor-fullname").textContent = fullNameStr;
+            document.getElementById("fasta-header").textContent = `>${fullNameStr}`;
+            document.getElementById("module-references").innerHTML = referenceHtml;
+        }
+
+        // Função mock de clique nos botões de download
+        function mockExport(format) {
+            const receptorName = document.getElementById("receptor-fullname").textContent;
+            alert(`[AÇÃO SIMULADA]
+
+O arquivo estruturado no formato ${format} para a quimera:
+"${receptorName}"
+
+foi gerado com sucesso e está pronto para download ou integração de pipeline.`);
+        }
+
+        // Executar inicialização
+        window.onload = initDropdowns;
+    </script>
+</body>
+</html>

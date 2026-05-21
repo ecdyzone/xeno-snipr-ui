@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XenoDesign Platform - Dashboard de Triagem</title>
+    <!-- Tailwind CSS para Design Premium -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 3Dmol.js para Visualização da Proteína em 3D -->
+    <script src="https://3dmol.org/build/3Dmol-min.js"></script>
+    <style>
+        .mol-container {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- Header Principal -->
+    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="bg-emerald-500 text-slate-950 p-2 rounded-lg font-bold">
+                <i class="fa-solid fa-dna"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight">XenoDesign <span class="text-emerald-400">Core</span></h1>
+                <p class="text-xs text-slate-400">Plataforma de Engenharia de Receptores Sintéticos via IA</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4 text-xs bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700">
+            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> Pipeline AlphaFold3 Ativo</span>
+        </div>
+    </header>
+
+    <!-- Layout Grid Principal -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
+        
+        <!-- Painel Esquerdo: Ranking (final_ranking.json) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+            <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-5 shadow-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-semibold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ol text-emerald-400"></i> Resultado da Triagem (final_ranking.json)
+                    </h2>
+                    <span class="text-xs bg-slate-800 px-2 py-1 rounded text-slate-400">3 Candidatos</span>
+                </div>
+                <p class="text-xs text-slate-400 mb-4">Selecione um receptor abaixo para carregar a simulação estrutural interativa.</p>
+
+                <!-- Tabela/Cards de Receptores -->
+                <div class="flex flex-col gap-3" id="ranking-container">
+                    <!-- Cards serão injetados via JS -->
+                </div>
+            </div>
+
+            <!-- Card de Detalhes da Opção Selecionada -->
+            <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-5 flex-1 flex flex-col justify-between shadow-xl">
+                <div>
+                    <h3 class="font-semibold text-slate-200 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-sky-400"></i> Especificações para a Bancada
+                    </h3>
+                    <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 text-xs font-mono text-slate-300 break-all h-24 overflow-y-auto mb-4" id="seq-display">
+                        <!-- Sequência FASTA dinâmica -->
+                    </div>
+                </div>
+                
+                <button onclick="exportSequence()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 cursor-pointer">
+                    <i class="fa-solid fa-file-export"></i> Exportar (.FASTA)
+                </button>
+            </div>
+        </div>
+
+        <!-- Painel Direito: Visualizador Molecular 3D -->
+        <div class="lg:col-span-7 flex flex-col bg-slate-950/40 border border-slate-800 rounded-xl p-5 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-semibold text-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-cube text-indigo-400"></i> Interação Receptor-Alvo In Silico
+                </h2>
+                <div class="flex gap-2 text-xs">
+                    <span class="bg-indigo-950 text-indigo-300 px-2 py-1 rounded border border-indigo-800 font-mono">PDB de Teste Ativo</span>
+                </div>
+            </div>
+
+            <!-- Container do 3Dmol -->
+            <div class="relative flex-1 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-center min-h-[450px]">
+                <div id="container-3d" class="mol-container"></div>
+                
+                <!-- Legenda sobreposta -->
+                <div class="absolute bottom-3 left-3 bg-slate-900/90 border border-slate-800 p-3 rounded-lg text-xs backdrop-blur flex flex-col gap-1.5 pointer-events-none">
+                    <div class="flex items-center gap-2">
+                        <span class="h-3 w-3 bg-red-400 rounded-sm"></span>
+                        <span class="text-slate-300">Domínio Variável do Receptor (scFv)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="h-3 w-3 bg-blue-400 rounded-sm"></span>
+                        <span class="text-slate-300">Antígeno Alvo Humano</span>
+                    </div>
+                </div>
+                
+                <!-- Dica de controle -->
+                <div class="absolute top-3 right-3 bg-slate-800/60 text-slate-400 px-2 py-1 rounded text-[10px] pointer-events-none">
+                    <i class="fa-solid fa-hand-pointer animate-bounce"></i> Use o mouse para girar / Scroll para Zoom
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script de Controle do Protótipo -->
+    <script>
+        // Mock Data simulando o arquivo final_ranking.json obtido no Passo 6
+        const mockData = [
+            {
+                id: "SNIPR-v3.1_TNFa",
+                rank: 1,
+                target: "TNF-alfa Humano",
+                iptm: 0.88,
+                safety: "Seguro (0% Homologia Suína)",
+                safetyClass: "text-emerald-400 bg-emerald-950/50 border-emerald-800",
+                pdbId: "pdb:1A2Y", // PDB real de exemplo para renderizar
+                sequence: ">SNIPR_v3.1_TNFa_Variable_Domain\nMAQVQLVQSGAEVKKPGASVKVSCKASGYTFTSYAMHWVRQAPGQRLEWMGWINAGNGNTKYSQKFQGRVTITRDTSASTAYMELSSLRSEDTAVYYCARGGYDSGFAYWGQGTLVTVSSGGGGSGGGGSGGGGSDIQMTQSPSSLSASVGDRVTITCRASQGIRNYLAWYQQKPGKAPKLLIYAASTLQSGVPSRFSGSGSGTDFTLTISSLQPEDVATYYCQRYNRAPYTFGQGTKVEIK"
+            },
+            {
+                id: "SNIPR-v1.4_C5a",
+                rank: 2,
+                target: "C5a Humano",
+                iptm: 0.74,
+                safety: "Seguro (2% Homologia Suína)",
+                safetyClass: "text-emerald-400 bg-emerald-950/50 border-emerald-800",
+                pdbId: "pdb:1YQV", // Outro PDB para variar a estrutura
+                sequence: ">SNIPR_v1.4_C5a_Variable_Domain\nEVQLVESGGGLVQPGGSLRLSCAASGFTFSSYWMHWVRQAPGKGLEWVAFIRYDGSNKYYADSVKGRFTISRDNSKNTLYLQMNSLRAEDTAVYYCARERAWRDYYFDFWGQGTLVTVSSGGGGSGGGGSGGGGSDIQMTQSPSSLSASVGDRVTITCRASQSISSYLNWYQQKPGKAPKLLIYAASSLQSGVPSRFSGSGSGTDFTLTISSLQPEDFATYYCQQYNSYPLTFGGGTKVEIK"
+            },
+            {
+                id: "SNIPR-v2.0_CD3",
+                rank: 3,
+                target: "CD3 epsilon Humano",
+                iptm: 0.59,
+                safety: "Alerta (Risco de Reação Cruzada)",
+                safetyClass: "text-amber-400 bg-amber-950/50 border-amber-800",
+                pdbId: "pdb:1BSRC",
+                sequence: ">SNIPR_v2.0_CD3_Variable_Domain\nQVQLQQSGAELARPGASVKMSCKASGYTFTRYTMHWVKQRPGQGLEWIGYINPSRGYTNYNQKFKDKATLTTDKSSSTAYMQLSSLTSEDSAVYYCARYYDDHYCLDYWGQGTTLTVSSGGGGSGGGGSGGGGSDIVLTQSPAIMSASPGEKVTMTCSASSSVSYMNWYQQKSGTSPKRWIYDTSKLASGVPAHFRGSGSGTSYSLTISGMEAEDAATYYCQQWSSNPFTFGSGTKLEIK"
+            }
+        ];
+
+        let viewer = null;
+
+        // Inicializa o visualizador 3Dmol
+        function init3DViewer(pdbString) {
+            const element = document.getElementById('container-3d');
+            element.innerHTML = ''; // Limpa anterior
+            
+            viewer = $3Dmol.createViewer(element, { backgroundColor: '#020617' });
+            
+            // Carrega a macromolécula
+            $3Dmol.download(pdbString, viewer, {}, function() {
+                // Renderiza Cadeia A com uma cor e Cadeia B com outra para simular o Docking
+                viewer.setStyle({chain: 'A'}, {cartoon: {color: '#f87171'}}); // Receptor (Vermelho)
+                viewer.setStyle({chain: 'B'}, {cartoon: {color: '#60a5fa'}}); // Alvo (Azul)
+                viewer.zoomTo();
+                viewer.render();
+            });
+        }
+
+        // Renderiza a lista de cards na tela
+        function renderRanking() {
+            const container = document.getElementById('ranking-container');
+            container.innerHTML = '';
+
+            mockData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.id = `card-${index}`;
+                card.className = `border p-4 rounded-xl cursor-pointer transition-all flex flex-col gap-2 bg-slate-900/40 border-slate-800 hover:border-slate-700`;
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500">Rank #${item.rank}</span>
+                            <h4 class="text-sm font-bold text-slate-200 mt-0.5">${item.id}</h4>
+                        </div>
+                        <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                            iPTM: <strong class="${item.iptm >= 0.7 ? 'text-emerald-400' : 'text-amber-400'}">${item.iptm}</strong>
+                        </span>
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        <i class="fa-solid fa-bullseye text-slate-500 mr-1"></i> Alvo: <span class="text-slate-300 font-medium">${item.target}</span>
+                    </div>
+                    <div class="text-xs border px-2.5 py-1 rounded-md mt-1 flex items-center gap-1.5 font-medium ${item.safetyClass}">
+                        <i class="fa-solid ${item.iptm >= 0.7 ? 'fa-shield-halved' : 'fa-triangle-exclamation'}"></i> ${item.safety}
+                    </div>
+                `;
+
+                card.addEventListener('click', () => selectCandidate(index));
+                container.appendChild(card);
+            });
+        }
+
+        // Altera o candidato selecionado e atualiza a tela
+        function selectCandidate(index) {
+            const selected = mockData[index];
+            
+            // Remove classes ativas de todos e adiciona no selecionado
+            mockData.forEach((_, idx) => {
+                const el = document.getElementById(`card-${idx}`);
+                el.classList.remove('border-emerald-500', 'bg-slate-800/40');
+                el.classList.add('border-slate-800', 'bg-slate-900/40');
+            });
+            
+            const activeCard = document.getElementById(`card-${index}`);
+            activeCard.classList.remove('border-slate-800', 'bg-slate-900/40');
+            activeCard.classList.add('border-emerald-500', 'bg-slate-800/40');
+
+            // Atualiza a sequência de texto abaixo
+            document.getElementById('seq-display').innerText = selected.sequence;
+
+            // Recarrega o modelo 3D correspondente
+            init3DViewer(selected.pdbId);
+        }
+
+        // Função de simulação do botão de exportação
+        function exportSequence() {
+            alert("Sucesso! Arquivo .FASTA gerado e salvo na pasta 'downloads/' pronto para envio à Twist Bioscience.");
+        }
+
+        // Inicialização ao carregar a página
+        window.onload = function() {
+            renderRanking();
+            selectCandidate(0); // Seleciona o primeiro por padrão
+        };
+    </script>
+</body>
+</html>
