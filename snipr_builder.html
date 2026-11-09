@@ -141,6 +141,14 @@
 
                 <!-- Form / Dropdowns -->
                 <div class="flex flex-col gap-4">
+                    <div>
+                        <label for="select-SP" class="block text-xs font-medium text-slate-400 mb-1.5 flex justify-between"><span>Fixo. Signal peptide</span><span class="flex items-center gap-1"><span class="module-dot" style="background-color: #FB7185;"></span> <span class="text-[10px] font-mono" style="color: var(--module-sp, #FB7185);">#FB7185</span></span></label>
+                        <select id="select-SP" disabled class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"><option>N-terminal CD8a signal peptide (21 aa)</option></select>
+                    </div>
+                    <div>
+                        <label for="select-MYC" class="block text-xs font-medium text-slate-400 mb-1.5 flex justify-between"><span>Fixo. Myc tag</span><span class="flex items-center gap-1"><span class="module-dot" style="background-color: #A78BFA;"></span> <span class="text-[10px] font-mono" style="color: var(--module-myc, #A78BFA);">#A78BFA</span></span></label>
+                        <select id="select-MYC" disabled class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"><option>myc-tag (10 aa)</option></select>
+                    </div>
                     <!-- 1. LBD Selector -->
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1.5 flex justify-between">
@@ -149,7 +157,6 @@
                         </label>
                         <select id="select-LBD" onchange="updateReceptor()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors">
                         </select>
-                        <p class="text-xs text-slate-500 mt-2">As opções da biblioteca incluem peptídeo sinal CD8a (21 aa) e tag myc (10 aa). Na visualização, essas regiões recebem cores próprias; o scFv aparece em ciano.</p>
                     </div>
 
                     <!-- 2. ECD Selector -->
@@ -293,11 +300,10 @@
         // Separa apenas prefixos exatos; nunca acrescenta resíduos à sequência.
         function getModuleRegions(mod, item) {
             if (mod !== 'LBD') return [{ ...item, module: mod, label: mod }];
-            const regions = [];
+            const regions = sniprNterminalRegions.map(region => ({ ...region, label: region.description }));
             let offset = 0;
             sniprNterminalRegions.forEach(region => {
                 if (item.sequence.startsWith(region.sequence, offset)) {
-                    regions.push({ ...region, label: region.description });
                     offset += region.sequence.length;
                 }
             });
