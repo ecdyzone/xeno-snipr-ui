@@ -135,6 +135,8 @@
                     <i class="fa-solid fa-sliders text-indigo-400"></i> Arquitetura Modular do Receptor
                 </h2>
                 
+                <p class="text-xs text-slate-400 mb-4">Escolha um módulo da biblioteca ou abra o editor abaixo de cada seletor para aplicar sua própria sequência. Módulos personalizados ficam salvos neste navegador.</p>
+
                 <!-- Form / Dropdowns -->
                 <div class="flex flex-col gap-4">
                     <!-- 1. LBD Selector -->
@@ -268,142 +270,10 @@
         </div>
     </main>
 
+    <!-- Biblioteca de módulos separada da interface; compatível com GitHub Pages. -->
+    <script src="snipr_modules.js"></script>
     <!-- Script de Dados e Lógica Interativa -->
     <script>
-        // Dados brutos extraídos diretamente do seu snipr_modules.csv
-        const sniprDatabase = {
-  "LBD": [
-    {
-      "name": "CD45 scFv (BC8 apamistamab)",
-      "sequence": "MALPVTALLLPLALLLHAARPEQKLISEEDLEVKLLESGGGLVQPGGSLKLSCAASGFDFSRYWMSWVRQAPGKGLEWIGEINPTSSTINFTPSLKDKVFISRDNAKNTLYLQMSKVRSEDTALYYCARGNYYRYGDAMDYWGQGTSVTVSSGGGGSGGGGSGGGGSGGGGSDIALTQSPASLAVSLGQRATISCRASKSVSTSGYSYLHWYQQKPGQPPKLLIYLASNLESGVPARFSGSGSGTDFTLNIHPVEEEDAATYYCQHSRELPFTFGSGTKLEIK",
-      "score": 0.0,
-      "reference": "https://www.imgt.org/mAb-DB/mAbcard?AbId=633",
-      "length": 283,
-      "description": "CD8_signalpeptide_myc-tag_CD45apamistamab-scFv"
-    },
-    {
-      "name": "CD3 scFv (OKT3 muromonab)",
-      "sequence": "MALPVTALLLPLALLLHAARPEQKLISEEDLQVQLQQSGAELARPGASVKMSCKASGYTFTRYTMHWVKQRPGQGLEWIGYINPSRGYTNYNQKFKDKATLTTDKSSSTAYMQLSSLTSEDSAVYYCARYYDDHYCLDYWGQGTTLTVSSGGGGSGGGGSGGGGSQIVLTQSPAIMSASPGEKVTMTCSASSSVSYMNWYQQKSGTSPKRWIYDTSKLASGVPAHFRGSGSGTSYSLTISGMEAEDAATYYCQQWSSNPFTFGSGTKLEIN",
-      "score": 0.0,
-      "reference": "https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/therasabdab/therasummary/?INN=Muromonab",
-      "length": 272,
-      "description": "CD8_signalpeptide_myc-tag_CD3muromonab-scFv"
-    },
-    {
-      "name": "VEGF",
-      "sequence": "MALPVTALLLPLALLLHAARPEQKLISEEDLDIQMTQSPSSLSASVGDRVTITCRASQDVSTAVAWYQQKPGKAPKLLIYSASFLYSGVPSRFSGSGSGTDFTLTISSLQPEDFATYYCKQGYANPWTFGQGTKVEIKGGGGSGGGGSGGGGSEVQLVESGGGLVQPGGSLRLSCAASGFTISDYWIHWVRQAPGKGLEWVAGITPAGGYTYYADSVKGRFTISADTSKNTAYLQMNSLRAEDTAVYYCARFVFFLPYAMDYWGQGTLVTVSS",
-      "score": 0.0,
-      "reference": "Piraner2024",
-      "length": 273,
-      "description": "CD8_signalpeptide_myc-tag_VEGF-scFv"
-    },
-    {
-      "name": "TGFbeta",
-      "sequence": "MALPVTALLLPLALLLHAARPEQKLISEEDLQVQLVQSGAEVKKPGSSVKVSCKASGYTFSSNVISWVRQAPGQGLEWMGGVIPIVDIANYAQRFKGRVTITADESTSTTYMELSSLRSEDTAVYYCALPRAFVLDAMDYWGQGTLVTVSSGGGGSGGGGSGGGGSETVLTQSPGTLSLSPGERATLSCRASQSLGSSYLAWYQQKPGQAPRLLIYGASSRAPGIPDRFSGSGSGTDFTLTISRLEPEDFAVYYCQQYADSPITFGQGTRLEIK",
-      "score": 0.0,
-      "reference": "Piraner2024",
-      "length": 274,
-      "description": "CD8_signalpeptide_myc-tag_TGFB-scFv"
-    }
-  ],
-  "ECD": [
-    {
-      "name": "CD8a_Hinge_V2",
-      "sequence": "TTTPAPRPPTPAPTIASQPLSLRPEAC",
-      "score": 0.0,
-      "reference": "Zhu et al. 2022 (Table S2)",
-      "length": 27,
-      "description": ""
-    },
-    {
-      "name": "Notch1_LNR",
-      "sequence": "ILDYSFGGGAGRDIPPPLIEEACELPECQEDAGNKVCSLQCNNHACGWDGGDCSLNFNDPWKNCTQSLQCWKYFSDGHCDSQCNSAGCLFDGFDCQRAEGQCNPLYDQYCKDHFSDGHCDQGCNSAECEWDGLDCAEHVPERLAAGTLVVVVLMPPEQLRNSSFHFLRELSRVLHTNVVFKRDAHGQQMIFPYYGREEELRKHPIKRAAEGWAAPDALLGQVKASLLPGGSEGGRRRRELDPMDVRGSIVYLEIDNRQCVQASSQCFQSATDVAAFLGALASLGSLNIPYKIEAVQSETVEPPPPAQLH",
-      "score": 0.0,
-      "reference": "Zhu et al. 2022 (Table S2)",
-      "length": 309,
-      "description": "Notch1 NRR from human Notch1"
-    }
-  ],
-  "TMD": [
-    {
-      "name": "NOTCH2tmd",
-      "sequence": "LLYLLAVAVVIILFIILLGVIMA",
-      "score": 28.55,
-      "reference": "Zhu et al. 2022 (Table S4)",
-      "length": 23,
-      "description": ""
-    },
-    {
-      "name": "NOTCH3",
-      "sequence": "LPLLVAGAVLLLVILVLGVMVA",
-      "score": 26.43,
-      "reference": "Zhu et al. 2022 (Table S4)",
-      "length": 22,
-      "description": ""
-    },
-    {
-      "name": "NOTCH1",
-      "sequence": "FMYVAAAAFVLLFFVGCGVLLS",
-      "score": 24.22,
-      "reference": "Zhu et al. 2022 (Table S4)",
-      "length": 22,
-      "description": ""
-    },
-    {
-      "name": "CLSTN1",
-      "sequence": "IATVVIIISVCMLVFVVAMGVY",
-      "score": 23.1,
-      "reference": "Zhu et al. 2022 (Table S4)",
-      "length": 22,
-      "description": ""
-    }
-  ],
-  "JMD": [
-    {
-      "name": "DAG1",
-      "sequence": "RKKRKGK",
-      "score": 58.64,
-      "reference": "Zhu et al. 2022 (Table S5)",
-      "length": 7,
-      "description": ""
-    },
-    {
-      "name": "NRG2",
-      "sequence": "KTKKQRKQMHNHLR",
-      "score": 53.68,
-      "reference": "Zhu et al. 2022 (Table S5)",
-      "length": 14,
-      "description": ""
-    },
-    {
-      "name": "NRG1",
-      "sequence": "KTKKQRKKLHDRLR",
-      "score": 36.61,
-      "reference": "Zhu et al. 2022 (Table S5)",
-      "length": 14,
-      "description": ""
-    },
-    {
-      "name": "NOTCH2",
-      "sequence": "KRKRKH",
-      "score": 22.25,
-      "reference": "Zhu et al. 2022 (Table S5)",
-      "length": 6,
-      "description": "Notch2 c-terminal JMD"
-    }
-  ],
-  "PAYLOAD": [
-    {
-      "name": "G4VP64",
-      "sequence": "MKLLSSIEQACDICRLKKLKCSKEKPKCAKCLKNNWECRYSPKTKRSPLTRAHLTEVESRLERLEQLFLLIFPREDLDMILKMDSLQDIKALLTGLFVQDNVNKDAVTDRLASVETDMPLTLRQHRISATSSSEESSNKGQRQLTVSAAAGGSGGSGGSDALDDFDLDMLGSDALDDFDLDMLGSDALDDFDLDMLGSDALDDFDLDMLGS",
-      "score": 0.0,
-      "reference": "Zhu et al. 2022 (Table S2)",
-      "length": 211,
-      "description": "Gal4DBD_VP64"
-    }
-  ]
-};
-
         // Cores padrão configuradas no seu snipr_visualizer.py
         const colorMapping = {
             "LBD": "#00FFFF",
@@ -432,23 +302,115 @@
 
         syncThemeToggle();
 
-        // Inicializa os dropdowns ao carregar o protótipo
-        function initDropdowns() {
-            const modules = ["LBD", "ECD", "TMD", "JMD", "PAYLOAD"];
-            
-            modules.forEach(mod => {
-                const selectElement = document.getElementById(`select-${mod}`);
-                const items = sniprDatabase[mod] || [];
-                
-                items.forEach((item, index) => {
-                    const option = document.createElement("option");
-                    option.value = index;
-                    option.textContent = `${item.name} (${item.length} aa)`;
-                    selectElement.appendChild(option);
-                });
-            });
+        const customModules = {};
+        const storageKey = 'snipr-builder-modules-v1';
 
-            // Dispara a montagem inicial do primeiro arranjo
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[char]);
+        }
+
+        function parseCustomModule(name, input) {
+            name = name.trim();
+            if (!name || name.length > 60 || /[\r\n]/.test(name)) {
+                throw new Error('Informe um nome com até 60 caracteres, em uma única linha.');
+            }
+            let raw = input.trim();
+            if (raw.startsWith('>')) raw = raw.split(/\r?\n/).slice(1).join('');
+            const sequence = raw.replace(/\s/g, '').toUpperCase();
+            if (!sequence || !/^[A-Z]+$/.test(sequence)) {
+                throw new Error('Use uma sequência de aminoácidos em letras (A–Z), sem números, lacunas ou *. Aceita um único registro FASTA.');
+            }
+            return { name, sequence, length: sequence.length, score: null,
+                reference: 'Sequência personalizada pelo usuário', description: 'Módulo personalizado (sem score)' };
+        }
+
+        function selectedModule(mod) {
+            const value = document.getElementById(`select-${mod}`).value;
+            return value === 'custom' ? customModules[mod] : sniprDatabase[mod][value];
+        }
+
+        function saveModules() {
+            const selections = Object.fromEntries(Object.keys(colorMapping).map(mod =>
+                [mod, document.getElementById(`select-${mod}`).value]));
+            try {
+                localStorage.setItem(storageKey, JSON.stringify({ customModules, selections }));
+                return true;
+            } catch (_) { return false; }
+        }
+
+        function applyCustomModule(event, mod) {
+            event.preventDefault();
+            const status = document.getElementById(`custom-status-${mod}`);
+            try {
+                const item = parseCustomModule(document.getElementById(`custom-name-${mod}`).value,
+                    document.getElementById(`custom-sequence-${mod}`).value);
+                customModules[mod] = item;
+                const select = document.getElementById(`select-${mod}`);
+                let option = select.querySelector('[value="custom"]');
+                if (!option) {
+                    option = document.createElement('option');
+                    option.value = 'custom';
+                    select.appendChild(option);
+                }
+                option.textContent = `${item.name} (${item.length} aa) · Personalizado`;
+                select.value = 'custom';
+                document.getElementById(`custom-sequence-${mod}`).value = item.sequence;
+                updateReceptor();
+                status.textContent = saveModules()
+                    ? `Aplicado: ${item.length} aa. Salvo neste navegador.`
+                    : `Aplicado: ${item.length} aa. Armazenamento indisponível; válido apenas nesta sessão.`;
+            } catch (error) {
+                status.textContent = error.message;
+            }
+        }
+
+        function initDropdowns() {
+            let saved = {};
+            try { saved = JSON.parse(localStorage.getItem(storageKey)) || {}; } catch (_) {}
+            Object.keys(colorMapping).forEach(mod => {
+                const select = document.getElementById(`select-${mod}`);
+                sniprDatabase[mod].forEach((item, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `${item.name} (${item.sequence.length} aa)`;
+                    select.appendChild(option);
+                });
+                try {
+                    const stored = saved.customModules[mod];
+                    customModules[mod] = parseCustomModule(stored.name, stored.sequence);
+                    const option = document.createElement('option');
+                    option.value = 'custom';
+                    option.textContent = `${customModules[mod].name} (${customModules[mod].length} aa) · Personalizado`;
+                    select.appendChild(option);
+                } catch (_) { /* Ignore missing or invalid stored modules. */ }
+                const previous = saved.selections?.[mod];
+                if ((previous === 'custom' && customModules[mod]) || /^\d+$/.test(previous) && sniprDatabase[mod][previous]) {
+                    select.value = previous;
+                }
+                const editor = document.createElement('details');
+                editor.className = 'mt-2 text-xs';
+                editor.innerHTML = `
+                    <summary class="cursor-pointer text-indigo-400 py-1">Adicionar / editar sequência personalizada</summary>
+                    <form class="grid gap-2 mt-2 bg-slate-950 border border-slate-800 rounded-lg p-3">
+                        <label for="custom-name-${mod}" class="text-slate-400">Nome do módulo ${mod}</label>
+                        <input id="custom-name-${mod}" type="text" maxlength="60" required
+                            class="w-full min-w-0 bg-slate-900 text-slate-200 border border-slate-700 rounded px-2 py-2" placeholder="Meu módulo ${mod}">
+                        <label for="custom-sequence-${mod}" class="text-slate-400">Sequência de aminoácidos</label>
+                        <textarea id="custom-sequence-${mod}" rows="3" required spellcheck="false" autocapitalize="characters" aria-describedby="custom-help-${mod}"
+                            class="w-full min-w-0 bg-slate-900 text-slate-200 border border-slate-700 rounded px-2 py-2 font-mono" placeholder="Cole a sequência ou um registro FASTA"></textarea>
+                        <p id="custom-help-${mod}" class="text-slate-500">Espaços e quebras de linha são removidos. Aceita letras A–Z (incluindo códigos ambíguos). Sem score atribuído. Clique em aplicar para atualizar a montagem.</p>
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg px-3 py-2 cursor-pointer">Aplicar sequência ${mod}</button>
+                        <p id="custom-status-${mod}" role="status" aria-live="polite" class="text-slate-400"></p>
+                    </form>`;
+                select.after(editor);
+                editor.querySelector('form').addEventListener('submit', event => applyCustomModule(event, mod));
+                if (customModules[mod]) {
+                    document.getElementById(`custom-name-${mod}`).value = customModules[mod].name;
+                    document.getElementById(`custom-sequence-${mod}`).value = customModules[mod].sequence;
+                }
+            });
             updateReceptor();
         }
 
@@ -458,45 +420,47 @@
             let fullSequenceHtml = "";
             let totalLength = 0;
             let combinedScore = 0;
+            let hasUnscoredModule = false;
             let nameParts = ["SNIPR"];
             let referenceHtml = "";
 
             modules.forEach(mod => {
-                const selectElement = document.getElementById(`select-${mod}`);
-                const selectedIdx = selectElement.value;
-                const activeItem = sniprDatabase[mod][selectedIdx];
+                const activeItem = selectedModule(mod);
 
                 if (activeItem) {
-                    totalLength += activeItem.length;
-                    combinedScore += activeItem.score;
+                    totalLength += activeItem.sequence.length;
+                    if (activeItem.score === null) hasUnscoredModule = true;
+                    else combinedScore += activeItem.score;
                     nameParts.push(activeItem.name);
 
                     // Adiciona o bloco de aminoácidos colorido
                     const color = `var(--module-${mod.toLowerCase()}, ${colorMapping[mod]})`;
-                    fullSequenceHtml += `<span style="color: ${color};" title="${mod}: ${activeItem.name}">${activeItem.sequence}</span>`;
+                    fullSequenceHtml += `<span style="color: ${color};" title="${mod}: ${escapeHtml(activeItem.name)}">${activeItem.sequence}</span>`;
 
                     // Ajusta a proporção proporcional das larguras visuais dos blocos
                     const barElement = document.getElementById(`bar-${mod}`);
-                    barElement.style.flexGrow = activeItem.length || 1;
+                    barElement.style.flexGrow = activeItem.sequence.length || 1;
                     barElement.textContent = activeItem.name;
 
                     // Compila as referências
-                    referenceHtml += `<p class="mb-1"><strong style="color: ${color};">${mod}:</strong> ${activeItem.reference || 'Sem referência'} - <em>${activeItem.description || 'Sem descrição'}</em></p>`;
+                    referenceHtml += `<p class="mb-1"><strong style="color: ${color};">${mod}:</strong> ${escapeHtml(activeItem.reference || 'Sem referência')} - <em>${escapeHtml(activeItem.description || 'Sem descrição')}</em></p>`;
                 }
             });
 
             // Calcula o Score Médio (Apenas ilustrativo baseado nas notas do CSV)
-            const averageScore = (combinedScore / modules.length).toFixed(1);
+            const averageScore = hasUnscoredModule ? 'N/D' : (combinedScore / modules.length).toFixed(1);
 
             // Atualiza os elementos DOM na interface
             document.getElementById("sequence-body").innerHTML = fullSequenceHtml;
             document.getElementById("stat-length").textContent = `${totalLength} aa`;
             document.getElementById("stat-score").textContent = averageScore;
+            document.getElementById("stat-score").title = hasUnscoredModule ? "A montagem contém módulos personalizados sem score." : "Média dos scores dos módulos.";
             
             const fullNameStr = nameParts.join("-");
             document.getElementById("receptor-fullname").textContent = fullNameStr;
             document.getElementById("fasta-header").textContent = `>${fullNameStr}`;
             document.getElementById("module-references").innerHTML = referenceHtml;
+            saveModules();
         }
 
         // Exporta a sequência proteica dos módulos atualmente selecionados.
@@ -504,7 +468,7 @@
             let sequence = "";
             const parts = ["SNIPR"];
             const features = Object.keys(colorMapping).map(mod => {
-                const item = sniprDatabase[mod][document.getElementById(`select-${mod}`).value];
+                const item = selectedModule(mod);
                 const start = sequence.length + 1;
                 sequence += item.sequence;
                 parts.push(item.name);
@@ -573,7 +537,7 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
-            link.download = `${assembly.name.replace(/[^a-zA-Z0-9_-]/g, "_")}.${isFasta ? "fasta" : "gb"}`;
+            link.download = `${assembly.name.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 180)}.${isFasta ? "fasta" : "gb"}`;
             document.body.appendChild(link);
             link.click();
             link.remove();
