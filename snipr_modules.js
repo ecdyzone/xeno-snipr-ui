@@ -1,4 +1,4 @@
-// Regiões N-terminais reconhecidas na visualização, sem alterar os módulos exportados.
+// Regiões N-terminais reconhecidas na visualização e nas anotações GenPept.
 const sniprNterminalRegions = [
   {
     module: "SP",

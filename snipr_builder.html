@@ -225,8 +225,8 @@
                     <button onclick="exportReceptor('FASTA')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs">
                         <i class="fa-solid fa-file-lines"></i> Exportar (.FASTA)
                     </button>
-                    <button onclick="exportReceptor('GenBank')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs shadow-lg shadow-indigo-600/10">
-                        <i class="fa-solid fa-dna"></i> Exportar (.GB / GenBank)
+                    <button onclick="exportReceptor('GenPept')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs shadow-lg shadow-indigo-600/10">
+                        <i class="fa-solid fa-file-lines"></i> Exportar (.GP / GenPept)
                     </button>
                 </div>
             </div>
@@ -291,7 +291,7 @@
         const regionColorMapping = { SP: '#FB7185', MYC: '#A78BFA', ...colorMapping };
 
         // Separa apenas prefixos exatos; nunca acrescenta resíduos à sequência.
-        function getDisplayRegions(mod, item) {
+        function getModuleRegions(mod, item) {
             if (mod !== 'LBD') return [{ ...item, module: mod, label: mod }];
             const regions = [];
             let offset = 0;
@@ -462,7 +462,7 @@
                     else combinedScore += activeItem.score;
                     nameParts.push(activeItem.name);
 
-                    getDisplayRegions(mod, activeItem).forEach(region => {
+                    getModuleRegions(mod, activeItem).forEach(region => {
                         const start = totalLength + 1;
                         totalLength += region.sequence.length;
                         const range = `${start}–${totalLength}`;
@@ -498,12 +498,15 @@
         function getAssembly() {
             let sequence = "";
             const parts = ["SNIPR"];
-            const features = Object.keys(colorMapping).map(mod => {
+            const features = [];
+            Object.keys(colorMapping).forEach(mod => {
                 const item = selectedModule(mod);
-                const start = sequence.length + 1;
-                sequence += item.sequence;
                 parts.push(item.name);
-                return { module: mod, item, start, end: sequence.length };
+                getModuleRegions(mod, item).forEach(region => {
+                    const start = sequence.length + 1;
+                    sequence += region.sequence;
+                    features.push({ module: region.module, item: region, start, end: sequence.length });
+                });
             });
             return { name: parts.join("-"), sequence, features };
         }
@@ -512,7 +515,7 @@
             return `>${assembly.name}\n${assembly.sequence.match(/.{1,60}/g).join("\n")}\n`;
         }
 
-        function formatGenBank(assembly) {
+        function formatGenPept(assembly) {
             const date = new Date().toISOString().slice(0, 10).split("-");
             const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
             const stamp = `${date[2]}-${months[Number(date[1]) - 1]}-${date[0]}`;
@@ -523,7 +526,10 @@
                 let remaining = text;
                 while (remaining.length > 58) {
                     const space = remaining.lastIndexOf(" ", 58);
-                    const end = space > 0 ? space : 58;
+                    // Keep long tokens (e.g. reference URLs) intact on continuation lines.
+                    const nextSpace = remaining.indexOf(" ", 58);
+                    const end = space > 0 ? space : nextSpace > 0 ? nextSpace : remaining.length;
+                    if (end === remaining.length) break;
                     lines.push("                     " + remaining.slice(0, end));
                     remaining = remaining.slice(end).trimStart();
                 }
@@ -531,23 +537,25 @@
                 return lines;
             };
             const lines = [
-                `LOCUS       ${"SNIPR".padEnd(16)} ${String(assembly.sequence.length).padStart(11)} aa                     SYN ${stamp}`,
+                `LOCUS       ${"SNIPR".padEnd(16)} ${String(assembly.sequence.length).padStart(11)} aa            linear   SYN ${stamp}`,
                 "DEFINITION  Assembled SNIPR protein.",
-                "ACCESSION   .",
-                "VERSION     .",
+                "ACCESSION   SNIPR",
+                "VERSION     SNIPR",
                 "KEYWORDS    .",
                 "SOURCE      synthetic construct",
                 "  ORGANISM  synthetic construct",
                 "            other sequences; artificial sequences.",
-                "COMMENT     Amino acid sequence assembled from selected SNIPR modules.",
+                "COMMENT     Local synthetic protein assembly; SNIPR is a local identifier.",
+                "            Coordinates refer to the full, unprocessed amino acid sequence.",
                 "FEATURES             Location/Qualifiers",
                 `     source          1..${assembly.sequence.length}`,
                 ...qualifier("organism", "synthetic construct"),
-                ...qualifier("mol_type", "protein")
+                `     Protein         1..${assembly.sequence.length}`,
+                ...qualifier("product", "Assembled SNIPR receptor")
             ];
-            assembly.features.forEach(({ module, item, start, end }) => {
-                lines.push(`     misc_feature    ${start}..${end}`,
-                    ...qualifier("label", `${module}: ${item.name}`),
+            assembly.features.forEach(({ item, start, end }) => {
+                lines.push(`     Region          ${start === end ? start : `${start}..${end}`}`,
+                    ...qualifier("region_name", `${item.label}: ${item.name}`),
                     ...qualifier("note", item.description || item.name));
                 if (item.reference) lines.push(...qualifier("note", `Reference: ${item.reference}`));
             });
@@ -563,12 +571,12 @@
         function exportReceptor(format) {
             const assembly = getAssembly();
             const isFasta = format === "FASTA";
-            const content = isFasta ? formatFasta(assembly) : formatGenBank(assembly);
+            const content = isFasta ? formatFasta(assembly) : formatGenPept(assembly);
             const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
-            link.download = `${assembly.name.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 180)}.${isFasta ? "fasta" : "gb"}`;
+            link.download = `${assembly.name.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 180)}.${isFasta ? "fasta" : "gp"}`;
             document.body.appendChild(link);
             link.click();
             link.remove();
