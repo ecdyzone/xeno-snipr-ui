@@ -83,6 +83,51 @@
     <!-- Main Workspace -->
     <main class="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-6 p-6">
         
+        <!-- Guia visual baseado no resumo gráfico de Zhu et al. (2022). -->
+        <details class="xl:col-span-12 bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
+            <summary class="cursor-pointer text-sm font-semibold text-slate-200 rounded-lg focus-visible:outline-2 focus-visible:outline-indigo-400">
+                O que é e como funciona um SNIPR?
+            </summary>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5 items-start">
+                <figure class="m-0 min-w-0">
+                    <a href="img/snipr-graphical-abstract.png" target="_blank" rel="noopener" class="block rounded-lg focus-visible:outline-2 focus-visible:outline-indigo-400" aria-label="Ampliar resumo gráfico do artigo em uma nova aba">
+                        <img src="img/snipr-graphical-abstract.png" width="822" height="820"
+                            class="block w-full max-w-sm mx-auto rounded-lg bg-white p-2"
+                            alt="Resumo gráfico de SNIPRs: a ligação ao antígeno desencadeia proteólise, liberando um regulador de transcrição que controla a expressão gênica. O diagrama destaca os módulos extracelular, transmembrana, justamembrana e transcricional.">
+                    </a>
+                    <figcaption class="text-xs text-slate-400 mt-3 leading-relaxed max-w-sm mx-auto">
+                        Resumo gráfico de <a href="https://doi.org/10.1016/j.cell.2022.03.023" target="_blank" rel="noopener" class="text-indigo-400 underline underline-offset-2">Zhu et al., Cell (2022)</a>. © 2022 Elsevier Inc.
+                        Cores originais do artigo; a legenda ao lado usa as cores do construtor. Clique na imagem para ampliar.
+                    </figcaption>
+                </figure>
+                <div>
+                    <p class="text-sm text-slate-200 leading-relaxed mb-4">O receptor conecta um sinal externo a uma resposta genética: reconhece um antígeno, sofre clivagem proteolítica e libera um regulador de transcrição. Explore abaixo o papel de cada peça da montagem.</p>
+                    <dl class="grid gap-3 text-xs leading-relaxed">
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2" style="border-left: 3px solid var(--module-lbd, #00FFFF);">
+                            <dt class="font-semibold text-slate-200"><a href="#select-LBD" class="underline underline-offset-2" style="color: var(--module-lbd, #00FFFF);">LBD</a> · Reconhecer</dt>
+                            <dd class="text-slate-400 mt-1">Liga-se ao antígeno e define o alvo reconhecido pelo receptor.</dd>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2" style="border-left: 3px solid var(--module-ecd, #00FF00);">
+                            <dt class="font-semibold text-slate-200"><a href="#select-ECD" class="underline underline-offset-2" style="color: var(--module-ecd, #00FF00);">ECD</a> · Conectar</dt>
+                            <dd class="text-slate-400 mt-1">Compõe a região extracelular entre o domínio de ligação e a membrana.</dd>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2" style="border-left: 3px solid var(--module-tmd, #FFFF00);">
+                            <dt class="font-semibold text-slate-200"><a href="#select-TMD" class="underline underline-offset-2" style="color: var(--module-tmd, #FFFF00);">TMD</a> · Atravessar a membrana</dt>
+                            <dd class="text-slate-400 mt-1">Ancora o receptor na membrana e participa do mecanismo de clivagem intramembrana.</dd>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2" style="border-left: 3px solid var(--module-jmd, #FF4500);">
+                            <dt class="font-semibold text-slate-200"><a href="#select-JMD" class="underline underline-offset-2" style="color: var(--module-jmd, #FF4500);">JMD</a> · Ajustar a resposta</dt>
+                            <dd class="text-slate-400 mt-1">Região próxima à membrana, no lado intracelular, que permite modular a atividade do receptor.</dd>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2" style="border-left: 3px solid var(--module-payload, #FF00FF);">
+                            <dt class="font-semibold text-slate-200"><a href="#select-PAYLOAD" class="underline underline-offset-2" style="color: var(--module-payload, #FF00FF);">PAYLOAD</a> · Regular genes</dt>
+                            <dd class="text-slate-400 mt-1">Regulador de transcrição liberado após a clivagem, responsável pela resposta de expressão gênica.</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </details>
+
         <!-- Painel Esquerdo: Seletores dos Módulos (5 Dropdowns) -->
         <div class="xl:col-span-5 flex flex-col gap-5">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-2xl">
