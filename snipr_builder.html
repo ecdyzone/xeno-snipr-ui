@@ -132,10 +132,10 @@
 
                 <!-- Botões de Ações de Exportação -->
                 <div class="grid grid-cols-2 gap-3 mt-6">
-                    <button onclick="mockExport('FASTA')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs">
+                    <button onclick="exportReceptor('FASTA')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs">
                         <i class="fa-solid fa-file-lines"></i> Exportar (.FASTA)
                     </button>
-                    <button onclick="mockExport('GenBank')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs shadow-lg shadow-indigo-600/10">
+                    <button onclick="exportReceptor('GenBank')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-xs shadow-lg shadow-indigo-600/10">
                         <i class="fa-solid fa-dna"></i> Exportar (.GB / GenBank)
                     </button>
                 </div>
@@ -395,15 +395,85 @@
             document.getElementById("module-references").innerHTML = referenceHtml;
         }
 
-        // Função mock de clique nos botões de download
-        function mockExport(format) {
-            const receptorName = document.getElementById("receptor-fullname").textContent;
-            alert(`[AÇÃO SIMULADA]
+        // Exporta a sequência proteica dos módulos atualmente selecionados.
+        function getAssembly() {
+            let sequence = "";
+            const parts = ["SNIPR"];
+            const features = Object.keys(colorMapping).map(mod => {
+                const item = sniprDatabase[mod][document.getElementById(`select-${mod}`).value];
+                const start = sequence.length + 1;
+                sequence += item.sequence;
+                parts.push(item.name);
+                return { module: mod, item, start, end: sequence.length };
+            });
+            return { name: parts.join("-"), sequence, features };
+        }
 
-O arquivo estruturado no formato ${format} para a quimera:
-"${receptorName}"
+        function formatFasta(assembly) {
+            return `>${assembly.name}\n${assembly.sequence.match(/.{1,60}/g).join("\n")}\n`;
+        }
 
-foi gerado com sucesso e está pronto para download ou integração de pipeline.`);
+        function formatGenBank(assembly) {
+            const date = new Date().toISOString().slice(0, 10).split("-");
+            const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+            const stamp = `${date[2]}-${months[Number(date[1]) - 1]}-${date[0]}`;
+            // Qualifiers use doubled quotes and wrapped lines in the flat-file format.
+            const qualifier = (key, value) => {
+                const text = `/${key}="${String(value).replace(/\s+/g, " ").replace(/"/g, '\"\"')}"`;
+                const lines = [];
+                let remaining = text;
+                while (remaining.length > 58) {
+                    const space = remaining.lastIndexOf(" ", 58);
+                    const end = space > 0 ? space : 58;
+                    lines.push("                     " + remaining.slice(0, end));
+                    remaining = remaining.slice(end).trimStart();
+                }
+                lines.push("                     " + remaining);
+                return lines;
+            };
+            const lines = [
+                `LOCUS       ${"SNIPR".padEnd(16)} ${String(assembly.sequence.length).padStart(11)} aa                     SYN ${stamp}`,
+                "DEFINITION  Assembled SNIPR protein.",
+                "ACCESSION   .",
+                "VERSION     .",
+                "KEYWORDS    .",
+                "SOURCE      synthetic construct",
+                "  ORGANISM  synthetic construct",
+                "            other sequences; artificial sequences.",
+                "COMMENT     Amino acid sequence assembled from selected SNIPR modules.",
+                "FEATURES             Location/Qualifiers",
+                `     source          1..${assembly.sequence.length}`,
+                ...qualifier("organism", "synthetic construct"),
+                ...qualifier("mol_type", "protein")
+            ];
+            assembly.features.forEach(({ module, item, start, end }) => {
+                lines.push(`     misc_feature    ${start}..${end}`,
+                    ...qualifier("label", `${module}: ${item.name}`),
+                    ...qualifier("note", item.description || item.name));
+                if (item.reference) lines.push(...qualifier("note", `Reference: ${item.reference}`));
+            });
+            lines.push("ORIGIN");
+            for (let offset = 0; offset < assembly.sequence.length; offset += 60) {
+                const groups = assembly.sequence.slice(offset, offset + 60).toLowerCase().match(/.{1,10}/g);
+                lines.push(`${String(offset + 1).padStart(9)} ${groups.join(" ")}`);
+            }
+            lines.push("//", "");
+            return lines.join("\n");
+        }
+
+        function exportReceptor(format) {
+            const assembly = getAssembly();
+            const isFasta = format === "FASTA";
+            const content = isFasta ? formatFasta(assembly) : formatGenBank(assembly);
+            const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `${assembly.name.replace(/[^a-zA-Z0-9_-]/g, "_")}.${isFasta ? "fasta" : "gb"}`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
         // Executar inicialização
