@@ -31,6 +31,8 @@
         :root { color-scheme: dark; }
         :root[data-theme="light"] {
             color-scheme: light;
+            --module-sp: #be123c;
+            --module-myc: #6d28d9;
             --module-lbd: #0e7490;
             --module-ecd: #15803d;
             --module-tmd: #854d0e;
@@ -147,6 +149,7 @@
                         </label>
                         <select id="select-LBD" onchange="updateReceptor()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors">
                         </select>
+                        <p class="text-xs text-slate-500 mt-2">As opções da biblioteca incluem peptídeo sinal CD8a (21 aa) e tag myc (10 aa). Na visualização, essas regiões recebem cores próprias; o scFv aparece em ciano.</p>
                     </div>
 
                     <!-- 2. ECD Selector -->
@@ -239,13 +242,8 @@
             </div>
 
             <!-- Visualizador de Bloco Linear Sintético -->
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-4 flex h-8 overflow-hidden items-stretch shadow-inner" style="padding-bottom: 6px;padding-top: 6px;">
-                <div id="bar-LBD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #00FFFF;" title="LBD">LBD</div>
-                <div id="bar-ECD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #00FF00;" title="ECD">ECD</div>
-                <div id="bar-TMD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #FFFF00;" title="TMD">TMD</div>
-                <div id="bar-JMD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #FF4500;" title="JMD">JMD</div>
-                <div id="bar-PAYLOAD" class="transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-slate-950 truncate" style="background-color: #FF00FF;" title="PAYLOAD">PAYLOAD</div>
-            </div>
+            <div id="sequence-bar" class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-3 flex h-8 overflow-hidden items-stretch shadow-inner" style="padding-bottom: 6px;padding-top: 6px;"></div>
+            <div id="sequence-legend" class="flex flex-wrap gap-x-4 gap-y-2 text-xs mb-4" aria-label="Regiões e posições na sequência"></div>
 
             <!-- Caixa de Texto da Sequência Colorida FASTA -->
             <div class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-5 relative overflow-y-auto max-h-[500px] shadow-inner flex flex-col">
@@ -290,6 +288,28 @@
             "JMD": "#FF4500",
             "PAYLOAD": "#FF00FF"
         };
+        const regionColorMapping = { SP: '#FB7185', MYC: '#A78BFA', ...colorMapping };
+
+        // Separa apenas prefixos exatos; nunca acrescenta resíduos à sequência.
+        function getDisplayRegions(mod, item) {
+            if (mod !== 'LBD') return [{ ...item, module: mod, label: mod }];
+            const regions = [];
+            let offset = 0;
+            sniprNterminalRegions.forEach(region => {
+                if (item.sequence.startsWith(region.sequence, offset)) {
+                    regions.push({ ...region, label: region.description });
+                    offset += region.sequence.length;
+                }
+            });
+            if (offset < item.sequence.length) {
+                const isLibraryItem = sniprDatabase.LBD.includes(item);
+                regions.push({ ...item, module: mod,
+                    label: isLibraryItem ? 'scFv (LBD)' : 'LBD',
+                    description: isLibraryItem ? item.description.replace(/^CD8_signalpeptide_myc-tag_/, '') : item.description,
+                    sequence: item.sequence.slice(offset) });
+            }
+            return regions;
+        }
 
         function syncThemeToggle() {
             const isDark = document.documentElement.dataset.theme === 'dark';
@@ -431,27 +451,28 @@
             let hasUnscoredModule = false;
             let nameParts = ["SNIPR"];
             let referenceHtml = "";
+            let barHtml = "";
+            let legendHtml = "";
 
             modules.forEach(mod => {
                 const activeItem = selectedModule(mod);
 
                 if (activeItem) {
-                    totalLength += activeItem.sequence.length;
                     if (activeItem.score === null) hasUnscoredModule = true;
                     else combinedScore += activeItem.score;
                     nameParts.push(activeItem.name);
 
-                    // Adiciona o bloco de aminoácidos colorido
-                    const color = `var(--module-${mod.toLowerCase()}, ${colorMapping[mod]})`;
-                    fullSequenceHtml += `<span style="color: ${color};" title="${mod}: ${escapeHtml(activeItem.name)}">${activeItem.sequence}</span>`;
-
-                    // Ajusta a proporção proporcional das larguras visuais dos blocos
-                    const barElement = document.getElementById(`bar-${mod}`);
-                    barElement.style.flexGrow = activeItem.sequence.length || 1;
-                    barElement.textContent = activeItem.name;
-
-                    // Compila as referências
-                    referenceHtml += `<p class="mb-1"><strong style="color: ${color};">${mod}:</strong> ${escapeHtml(activeItem.reference || 'Sem referência')} - <em>${escapeHtml(activeItem.description || 'Sem descrição')}</em></p>`;
+                    getDisplayRegions(mod, activeItem).forEach(region => {
+                        const start = totalLength + 1;
+                        totalLength += region.sequence.length;
+                        const range = `${start}–${totalLength}`;
+                        const color = `var(--module-${region.module.toLowerCase()}, ${regionColorMapping[region.module]})`;
+                        const title = escapeHtml(`${region.label}: ${region.name} · ${range} (${region.sequence.length} aa)`);
+                        fullSequenceHtml += `<span style="color: ${color};" title="${title}">${region.sequence}</span>`;
+                        barHtml += `<div id="bar-${region.module}" class="transition-all duration-300 text-center text-[10px] font-bold text-slate-950 truncate" style="flex: ${region.sequence.length} 1 0%; min-width: 0; background-color: ${regionColorMapping[region.module]};" title="${title}" aria-label="${title}">${escapeHtml(region.label)}</div>`;
+                        legendHtml += `<span style="color: ${color};" title="${title}"><strong>${escapeHtml(region.label)}</strong> · ${range} (${region.sequence.length} aa)</span>`;
+                        referenceHtml += `<p class="mb-1"><strong style="color: ${color};">${escapeHtml(region.label)}:</strong> ${escapeHtml(region.reference || 'Sem referência')} - <em>${escapeHtml(region.description || 'Sem descrição')}</em></p>`;
+                    });
                 }
             });
 
@@ -460,6 +481,8 @@
 
             // Atualiza os elementos DOM na interface
             document.getElementById("sequence-body").innerHTML = fullSequenceHtml;
+            document.getElementById("sequence-bar").innerHTML = barHtml;
+            document.getElementById("sequence-legend").innerHTML = legendHtml;
             document.getElementById("stat-length").textContent = `${totalLength} aa`;
             document.getElementById("stat-score").textContent = averageScore;
             document.getElementById("stat-score").title = hasUnscoredModule ? "A montagem contém módulos personalizados sem score." : "Média dos scores dos módulos.";

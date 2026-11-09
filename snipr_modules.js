@@ -1,3 +1,25 @@
+// Regiões N-terminais reconhecidas na visualização, sem alterar os módulos exportados.
+const sniprNterminalRegions = [
+  {
+    module: "SP",
+    name: "N-terminal CD8a signal peptide",
+    sequence: "MALPVTALLLPLALLLHAARP",
+    score: 0,
+    reference: "Zhu et al. 2022 (Method Details)",
+    length: 21,
+    description: "Peptídeo sinal CD8a"
+  },
+  {
+    module: "MYC",
+    name: "myc-tag",
+    sequence: "EQKLISEEDL",
+    score: 0,
+    reference: "Zhu et al. 2022 (Method Details)",
+    length: 10,
+    description: "Tag myc"
+  }
+];
+
 // Biblioteca padrão de módulos. Carregada como script para funcionar também via file://.
         // Dados brutos extraídos diretamente do seu snipr_modules.csv
         const sniprDatabase = {
