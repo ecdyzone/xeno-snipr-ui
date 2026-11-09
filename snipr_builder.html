@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SNIPR Modular Builder - Protótipo</title>
+    <script>
+        // Apply the saved preference before rendering to avoid a theme flash.
+        let initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        try {
+            const savedTheme = localStorage.getItem('snipr-theme');
+            if (savedTheme === 'light' || savedTheme === 'dark') initialTheme = savedTheme;
+        } catch (_) { /* Storage may be unavailable for local files. */ }
+        document.documentElement.dataset.theme = initialTheme;
+    </script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- FontAwesome para Ícones -->
@@ -19,12 +28,42 @@
             border-radius: 50%;
             display: inline-block;
         }
+        :root { color-scheme: dark; }
+        :root[data-theme="light"] {
+            color-scheme: light;
+            --module-lbd: #0e7490;
+            --module-ecd: #15803d;
+            --module-tmd: #854d0e;
+            --module-jmd: #c2410c;
+            --module-payload: #a21caf;
+        }
+        html[data-theme="light"] .bg-slate-950 { background-color: #f8fafc; }
+        html[data-theme="light"] .bg-slate-900 { background-color: #ffffff; }
+        html[data-theme="light"] [class~="bg-slate-900/50"],
+        html[data-theme="light"] [class~="bg-slate-950/60"] { background-color: #f1f5f9; }
+        html[data-theme="light"] .bg-slate-800 { background-color: #e2e8f0; }
+        html[data-theme="light"] .hover\:bg-slate-700:hover { background-color: #cbd5e1; }
+        html[data-theme="light"] .border-slate-800,
+        html[data-theme="light"] .border-slate-700 { border-color: #cbd5e1; }
+        html[data-theme="light"] .text-slate-100,
+        html[data-theme="light"] .text-slate-200 { color: #0f172a; }
+        html[data-theme="light"] .text-slate-400,
+        html[data-theme="light"] .text-slate-500 { color: #475569; }
+        html[data-theme="light"] .text-indigo-300,
+        html[data-theme="light"] .text-indigo-400 { color: #4338ca; }
+        html[data-theme="light"] .text-sky-400 { color: #0369a1; }
+        html[data-theme="light"] .text-cyan-400 { color: var(--module-lbd); }
+        html[data-theme="light"] .text-emerald-400 { color: var(--module-ecd); }
+        html[data-theme="light"] .text-yellow-400 { color: var(--module-tmd); }
+        html[data-theme="light"] .text-orange-500 { color: var(--module-jmd); }
+        html[data-theme="light"] .text-magenta-400 { color: var(--module-payload) !important; }
+        #theme-toggle:focus-visible { outline: 2px solid #818cf8; outline-offset: 3px; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
 
     <!-- Header -->
-    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur px-6 py-4 flex justify-between items-center">
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur px-6 py-4 flex flex-wrap gap-4 justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="bg-indigo-600 text-white p-2 rounded-lg font-bold shadow-lg shadow-indigo-600/20">
                 <i class="fa-solid fa-cubes"></i>
@@ -34,10 +73,11 @@
                 <p class="text-xs text-slate-400">Montagem Combinatória de Receptores Sintéticos</p>
             </div>
         </div>
-        <div class="text-xs bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-indigo-400 animate-pulse"></span>
-            <span>Modo de Prova de Conceito (Mock Data)</span>
-        </div>
+        <button id="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Alternar tema" aria-pressed="false"
+            class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-2 rounded-lg flex items-center gap-2 cursor-pointer shrink-0">
+            <i id="theme-icon" class="fa-solid fa-moon" aria-hidden="true"></i>
+            <span id="theme-label">Modo escuro</span>
+        </button>
     </header>
 
     <!-- Main Workspace -->
@@ -328,6 +368,25 @@
             "PAYLOAD": "#FF00FF"
         };
 
+        function syncThemeToggle() {
+            const isDark = document.documentElement.dataset.theme === 'dark';
+            const label = isDark ? 'Modo claro' : 'Modo escuro';
+            document.getElementById('theme-label').textContent = label;
+            document.getElementById('theme-icon').className = `fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`;
+            const button = document.getElementById('theme-toggle');
+            button.setAttribute('aria-label', `Ativar ${label.toLowerCase()}`);
+            button.setAttribute('aria-pressed', String(isDark));
+        }
+
+        function toggleTheme() {
+            const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.dataset.theme = theme;
+            try { localStorage.setItem('snipr-theme', theme); } catch (_) {}
+            syncThemeToggle();
+        }
+
+        syncThemeToggle();
+
         // Inicializa os dropdowns ao carregar o protótipo
         function initDropdowns() {
             const modules = ["LBD", "ECD", "TMD", "JMD", "PAYLOAD"];
@@ -368,7 +427,7 @@
                     nameParts.push(activeItem.name);
 
                     // Adiciona o bloco de aminoácidos colorido
-                    const color = colorMapping[mod];
+                    const color = `var(--module-${mod.toLowerCase()}, ${colorMapping[mod]})`;
                     fullSequenceHtml += `<span style="color: ${color};" title="${mod}: ${activeItem.name}">${activeItem.sequence}</span>`;
 
                     // Ajusta a proporção proporcional das larguras visuais dos blocos
